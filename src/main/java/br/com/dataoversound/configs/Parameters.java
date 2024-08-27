@@ -1,6 +1,6 @@
 package br.com.dataoversound.configs;
 
-public class Parameters {
+abstract class Parameters {
 
     // Audio Parameters
     private float sampleRate;
