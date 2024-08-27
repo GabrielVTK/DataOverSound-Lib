@@ -7,8 +7,8 @@ public class Utils {
         char[] chars = input.toCharArray();
         for (char aChar : chars) {
             result.append(
-                    String.format("%8s", Integer.toBinaryString(aChar))   // char -> int, auto-cast
-                            .replaceAll(" ", "0")         // zero pads
+                    String.format("%8s", Integer.toBinaryString(aChar))
+                            .replaceAll(" ", "0")
             );
         }
 
@@ -23,7 +23,6 @@ public class Utils {
 
         return result.toString();
     }
-
 
     public static byte[] doubleToByte(double[] signal) {
         short[] signalShort;
