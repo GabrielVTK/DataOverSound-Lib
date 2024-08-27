@@ -40,6 +40,13 @@ public class Utils {
 
             double value = arrDouble[i];
 
+            // Limitando o valor ao intervalo [-1.0, 1.0]
+            if (value > 1.0) {
+                value = 1.0;
+            } else if (value < -1.0) {
+                value = -1.0;
+            }
+
             short shortValue = (short) (Short.MAX_VALUE * value);
 
             arrShort[i] = shortValue;
