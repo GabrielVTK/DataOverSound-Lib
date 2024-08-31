@@ -1,26 +1,52 @@
 package br.com.dataoversound.services;
 
-
+import br.com.dataoversound.components.QPSKPreambleComponent;
 import br.com.dataoversound.configs.QPSKParameters;
 import br.com.dataoversound.utils.Utils;
 import lombok.AllArgsConstructor;
 import org.apache.commons.math3.complex.Complex;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-@AllArgsConstructor
 public class QPSKDemodulationService {
 
     private QPSKParameters parameters;
 
+    private QPSKPreambleComponent preambleComponent;
+
+    public QPSKDemodulationService(QPSKParameters parameters) {
+        this.parameters = parameters;
+        this.preambleComponent = new QPSKPreambleComponent(this.parameters);
+    }
+
     public String demodulateMessage(double[] signal) {
 
-        List<Complex> demodulatedSymbols = this.demodulateQPSK(signal);
+        int preambleStartIndex = this.preambleComponent.detectPreamble(signal);
+        if (preambleStartIndex != -1) {
+            System.out.println("Preamble detected at index: " + preambleStartIndex);
+        } else {
+            System.out.println("Preamble not detected");
+            return "Erro na detecção do preâmbulo";
+        }
 
-        String bitsOutput = QPSKDemodulationService.bitsFromDemodulatedSymbols(demodulatedSymbols);
+        double[] newSignal = Arrays.copyOfRange(signal, preambleStartIndex + 3520, signal.length);
+
+        List<Complex> demodulatedSymbols = this.demodulateQPSK(newSignal);
+
+        List<Complex> symbolsNumber = demodulatedSymbols.subList(0, 4);
+        String symbolNumberBits = this.bitsFromDemodulatedSymbols(symbolsNumber);
+        Integer symbolNumberInt = Integer.parseInt(symbolNumberBits, 2);
+
+        if(demodulatedSymbols.size() < symbolNumberInt + 4) {
+            return "Erro na demodulação da mensagem, número de simbolos insuficiente para mensagem";
+        }
+
+        List<Complex> symbolsMessage = demodulatedSymbols.subList(4, symbolNumberInt + 4);
+
+        String bitsOutput = QPSKDemodulationService.bitsFromDemodulatedSymbols(symbolsMessage);
         return Utils.convertBinaryToString(bitsOutput);
-
     }
 
     public List<Complex> demodulateQPSK(double[] receivedSignal) {

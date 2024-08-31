@@ -1,6 +1,8 @@
 package br.com.dataoversound.services;
 
+import br.com.dataoversound.components.QPSKPreambleComponent;
 import br.com.dataoversound.configs.QPSKParameters;
+import br.com.dataoversound.utils.QPSKUtils;
 import br.com.dataoversound.utils.Utils;
 import lombok.AllArgsConstructor;
 import org.apache.commons.math3.complex.Complex;
@@ -12,14 +14,30 @@ import java.util.List;
 public class QPSKModulationService {
 
     private QPSKParameters parameters;
+    private QPSKPreambleComponent preambleComponent;
+
+    private double[] signal;
+
+    public QPSKModulationService(QPSKParameters parameters) {
+        this.parameters = parameters;
+        this.preambleComponent = new QPSKPreambleComponent(this.parameters);
+        this.signal = new double[0];
+    }
 
     public double[] modulateMessage(String message) {
+        this.signal = new double[0];
         String bits = Utils.convertStringToBinary(message);
-        return this.modulateBits(bits);
+        String symbolsNumber = Utils.convertIntegerToBinary(bits.length() / 2);
+
+        this.signal = Utils.concatArray(this.signal, preambleComponent.generatePreamble());
+        this.signal = Utils.concatArray(this.signal, this.modulateBits(symbolsNumber));
+        this.signal = Utils.concatArray(this.signal, this.modulateBits(bits));
+
+        return this.signal;
     }
 
     public double[] modulateBits(String bits) {
-        List<Complex> symbols = convertBitsToComplex(bits);
+        List<Complex> symbols = QPSKUtils.convertBitsToComplex(bits);
 
         // Lista para armazenar as amostras do sinal modulado
         List<Double> modulatedSignal = new ArrayList<>();
@@ -42,31 +60,4 @@ public class QPSKModulationService {
         return modulatedSignal.stream().mapToDouble(Double::doubleValue).toArray();
     }
 
-    private List<Complex> convertBitsToComplex(String bits) {
-        List<Complex> symbols = new ArrayList<>();
-
-        // Mapeamento de cada par de bits para um símbolo QPSK
-        for (int i = 0; i < bits.length() - 1; i += 2) {
-            String pair = bits.substring(i, i + 2);
-            Complex symbol = mapBitsToQPSKSymbol(pair);
-            symbols.add(symbol);
-        }
-
-        return symbols;
-    }
-
-    private Complex mapBitsToQPSKSymbol(String bits) {
-        switch (bits) {
-            case "00":
-                return new Complex(Math.cos(Math.PI / 4), Math.sin(Math.PI / 4)); // 45 degrees
-            case "01":
-                return new Complex(Math.cos(3 * Math.PI / 4), Math.sin(3 * Math.PI / 4)); // 135 degrees
-            case "11":
-                return new Complex(Math.cos(5 * Math.PI / 4), Math.sin(5 * Math.PI / 4)); // 225 degrees (-135 degrees)
-            case "10":
-                return new Complex(Math.cos(7 * Math.PI / 4), Math.sin(7 * Math.PI / 4)); // 315 degrees (-45 degrees)
-            default:
-                throw new IllegalArgumentException("Invalid bit pair: " + bits);
-        }
-    }
 }

@@ -65,4 +65,22 @@ public class Utils {
         return arrByte;
     }
 
+    public static double[] concatArray(double[] array1, double[] array2) {
+        // Cria um novo array com o tamanho somado dos dois arrays
+        double[] newArray = new double[array1.length + array2.length];
+
+        // Copia os elementos do primeiro array para o novo array
+        System.arraycopy(array1, 0, newArray, 0, array1.length);
+
+        // Copia os elementos do segundo array para o novo array
+        System.arraycopy(array2, 0, newArray, array1.length, array2.length);
+
+        // Retorna o array unificado
+        return newArray;
+    }
+
+    public static String convertIntegerToBinary(int input) {
+        return String.format("%8s", Integer.toBinaryString(input)).replaceAll(" ", "0");
+    }
+
 }
