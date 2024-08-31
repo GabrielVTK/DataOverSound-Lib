@@ -23,15 +23,15 @@ public class QPSKDemodulationService {
 
     public String demodulateMessage(double[] signal) {
 
-        int preambleStartIndex = this.preambleComponent.detectPreamble(signal);
-        if (preambleStartIndex != -1) {
-            System.out.println("Preamble detected at index: " + preambleStartIndex);
+        int preambleEndIndex = this.preambleComponent.detectPreamble(signal);
+        if (preambleEndIndex != -1) {
+            System.out.println("Preamble detected at index: " + preambleEndIndex);
         } else {
             System.out.println("Preamble not detected");
             return "Erro na detecção do preâmbulo";
         }
 
-        double[] newSignal = Arrays.copyOfRange(signal, preambleStartIndex + 3520, signal.length);
+        double[] newSignal = Arrays.copyOfRange(signal, preambleEndIndex, signal.length);
 
         List<Complex> demodulatedSymbols = this.demodulateQPSK(newSignal);
 

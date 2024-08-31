@@ -62,6 +62,10 @@ public class QPSKPreambleComponent {
             }
         }
 
+        if(maxIndex != -1) {
+            maxIndex += knownPreamble.length;
+        }
+
         return maxIndex;
     }
 
