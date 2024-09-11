@@ -3,9 +3,13 @@ package br.com.dataoversound.components;
 import br.com.dataoversound.configs.QPSKParameters;
 import br.com.dataoversound.utils.QPSKUtils;
 import org.apache.commons.math3.complex.Complex;
+import org.jtransforms.fft.DoubleFFT_1D;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.IntStream;
 
 
 public class QPSKPreambleComponent {
@@ -41,16 +45,11 @@ public class QPSKPreambleComponent {
     }
 
     public int detectPreamble(double[] signal) {
+        long tempoInicial = System.currentTimeMillis();
         double[] knownPreamble = this.generatePreamble();
-        double[] correlation = new double[signal.length - knownPreamble.length + 1];
 
         // Calcular a correlação
-        for (int i = 0; i <= signal.length - knownPreamble.length; i++) {
-            correlation[i] = 0;
-            for (int j = 0; j < knownPreamble.length; j++) {
-                correlation[i] += signal[i + j] * knownPreamble[j];
-            }
-        }
+        double[] correlation = this.correlateWithFFT(signal, knownPreamble);
 
         // Encontrar o índice da correlação máxima
         int maxIndex = -1;
@@ -66,7 +65,48 @@ public class QPSKPreambleComponent {
             maxIndex += knownPreamble.length;
         }
 
+        System.out.println("o metodo detectPreamble executou em " + (System.currentTimeMillis() - tempoInicial));
+
         return maxIndex;
+    }
+
+    private double[] correlateWithFFT(double[] signal, double[] knownPreamble) {
+        int n = signal.length + knownPreamble.length - 1; // Tamanho da convolução/correlação
+        int fftSize = (int) Math.pow(2, Math.ceil(Math.log(n) / Math.log(2))); // Encontre a próxima potência de 2 para eficiência
+
+        // Prepare o sinal e o préambulo, zeropad até o comprimento do FFT
+        double[] paddedSignal = new double[fftSize];
+        double[] paddedPreamble = new double[fftSize];
+
+        System.arraycopy(signal, 0, paddedSignal, 0, signal.length);
+        System.arraycopy(knownPreamble, 0, paddedPreamble, 0, knownPreamble.length);
+
+        // Calcular a FFT dos dois sinais
+        DoubleFFT_1D fft = new DoubleFFT_1D(fftSize);
+        fft.realForward(paddedSignal);     // FFT do sinal
+        fft.realForward(paddedPreamble);   // FFT do préambulo
+
+        // Multiplicar pela conjugada da FFT do préambulo (parte real e imaginária)
+        for (int i = 0; i < fftSize / 2; i++) {
+            double realSignal = paddedSignal[2 * i];
+            double imagSignal = paddedSignal[2 * i + 1];
+
+            double realPreamble = paddedPreamble[2 * i];
+            double imagPreamble = paddedPreamble[2 * i + 1];
+
+            // Multiplicar (real + i * imag) * (real - i * imag) -> a forma conjugada
+            paddedSignal[2 * i] = realSignal * realPreamble + imagSignal * imagPreamble; // Real
+            paddedSignal[2 * i + 1] = imagSignal * realPreamble - realSignal * imagPreamble; // Imaginário
+        }
+
+        // Transformada inversa de volta ao domínio do tempo
+        fft.realInverse(paddedSignal, true);
+
+        // O resultado da correlação será armazenado nos primeiros n elementos
+        double[] correlation = new double[n];
+        System.arraycopy(paddedSignal, 0, correlation, 0, n);
+
+        return correlation;
     }
 
 }

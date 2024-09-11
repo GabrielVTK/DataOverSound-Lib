@@ -36,7 +36,7 @@ public class QPSKModulationService {
         return this.signal;
     }
 
-    public double[] modulateBits(String bits) {
+    private double[] modulateBits(String bits) {
         List<Complex> symbols = QPSKUtils.convertBitsToComplex(bits);
 
         // Lista para armazenar as amostras do sinal modulado

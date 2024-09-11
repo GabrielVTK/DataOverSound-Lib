@@ -23,15 +23,15 @@ public class QPSKUtils {
     private static Complex mapBitsToQPSKSymbol(String bits) {
         switch (bits) {
             case "00":
-                return new Complex(Math.cos(Math.PI / 4), Math.sin(Math.PI / 4)); // 45 degrees
+                return new Complex(Math.cos(Math.PI / 4), Math.sin(Math.PI / 4)); // 45º
             case "01":
-                return new Complex(Math.cos(3 * Math.PI / 4), Math.sin(3 * Math.PI / 4)); // 135 degrees
+                return new Complex(Math.cos(3 * Math.PI / 4), Math.sin(3 * Math.PI / 4)); // 135º
             case "11":
-                return new Complex(Math.cos(5 * Math.PI / 4), Math.sin(5 * Math.PI / 4)); // 225 degrees (-135 degrees)
+                return new Complex(Math.cos(5 * Math.PI / 4), Math.sin(5 * Math.PI / 4)); // 225º (-135º)
             case "10":
-                return new Complex(Math.cos(7 * Math.PI / 4), Math.sin(7 * Math.PI / 4)); // 315 degrees (-45 degrees)
+                return new Complex(Math.cos(7 * Math.PI / 4), Math.sin(7 * Math.PI / 4)); // 315º (-45º)
             default:
-                throw new IllegalArgumentException("Invalid bit pair: " + bits);
+                throw new IllegalArgumentException("Par de bits inválido: " + bits);
         }
     }
 

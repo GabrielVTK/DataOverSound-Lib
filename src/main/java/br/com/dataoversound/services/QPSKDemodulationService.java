@@ -3,7 +3,6 @@ package br.com.dataoversound.services;
 import br.com.dataoversound.components.QPSKPreambleComponent;
 import br.com.dataoversound.configs.QPSKParameters;
 import br.com.dataoversound.utils.Utils;
-import lombok.AllArgsConstructor;
 import org.apache.commons.math3.complex.Complex;
 
 import java.util.ArrayList;
@@ -52,23 +51,36 @@ public class QPSKDemodulationService {
     public List<Complex> demodulateQPSK(double[] receivedSignal) {
         List<Complex> demodulatedSymbols = new ArrayList<>();
 
-        int numSymbols = receivedSignal.length / this.parameters.getSamplePerSymbol();
+        double carrierFrequency = this.parameters.getCarrierFrequency();
+        double sampleRate = this.parameters.getSampleRate();
+        int samplesPerSymbol = this.parameters.getSamplePerSymbol();
+
+        int numSymbols = receivedSignal.length / samplesPerSymbol;
+
+        // Pré-computa o fator de frequência
+        double angularFrequency = 2 * Math.PI * carrierFrequency;
+
+        long tempoInicial = System.currentTimeMillis();
 
         // Percorre o sinal recebido, demodulando cada símbolo QPSK
         for (int i = 0; i < numSymbols; i++) {
             double real = 0;
             double imag = 0;
 
-            for (int j = 0; j < this.parameters.getSamplePerSymbol(); j++) {
-                double t = j / this.parameters.getSampleRate();
-                real += receivedSignal[i * this.parameters.getSamplePerSymbol() + j] * Math.cos(2 * Math.PI * this.parameters.getCarrierFrequency() * t);
-                imag -= receivedSignal[i * this.parameters.getSamplePerSymbol() + j] * Math.sin(2 * Math.PI * this.parameters.getCarrierFrequency() * t);
+            for (int j = 0; j < samplesPerSymbol; j++) {
+                double t = j / sampleRate;
+                int index = i * samplesPerSymbol + j;
+                double sample = receivedSignal[index];
+
+                real += sample * Math.cos(angularFrequency * t);
+                imag -= sample * Math.sin(angularFrequency * t);
             }
 
             // Demodula o símbolo QPSK
-            Complex symbol = new Complex(real, imag);
-            demodulatedSymbols.add(symbol);
+            demodulatedSymbols.add(new Complex(real, imag));
         }
+
+        System.out.println("o metodo demodulateQPSK executou em " + (System.currentTimeMillis() - tempoInicial)); // 463 450
 
         return demodulatedSymbols;
     }

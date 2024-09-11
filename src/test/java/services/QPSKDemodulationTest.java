@@ -15,7 +15,7 @@ public class QPSKDemodulationTest extends TestCase {
     QPSKDemodulationService qpskDemodulationService;
 
     String message = "Gabriel";
-    float carrierFrequency = 440.0f;
+    float carrierFrequency = 20000f;
 
     @Override
     protected void setUp() throws Exception {
@@ -23,7 +23,7 @@ public class QPSKDemodulationTest extends TestCase {
                 44100.0f,
                 carrierFrequency,
                 1.0f,
-                (int) (carrierFrequency * 2)
+                (int) (carrierFrequency * 10)
         );
 
         this.qpskModulationService = new QPSKModulationService(qpskParameters);

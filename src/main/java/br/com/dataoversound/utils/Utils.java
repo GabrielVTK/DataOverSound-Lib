@@ -15,10 +15,10 @@ public class Utils {
         return result.toString();
     }
 
-    public static String convertBinaryToString(String input) {
+    public static String convertBinaryToString(String bits) {
         StringBuilder result = new StringBuilder();
-        for(int i = 0; i < input.length(); i += 8){
-            result.append((char)Integer.parseInt(input.substring(i, i + 8), 2));
+        for(int i = 0; i < bits.length(); i += 8){
+            result.append((char)Integer.parseInt(bits.substring(i, i + 8), 2));
         }
 
         return result.toString();
