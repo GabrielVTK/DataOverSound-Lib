@@ -50,7 +50,7 @@ public class QPSKDemodulationService {
 
     public List<Complex> demodulateQPSK(double[] receivedSignal) {
         List<Complex> demodulatedSymbols = new ArrayList<>();
-
+ 
         double carrierFrequency = this.parameters.getCarrierFrequency();
         double sampleRate = this.parameters.getSampleRate();
         int samplesPerSymbol = this.parameters.getSamplePerSymbol();
