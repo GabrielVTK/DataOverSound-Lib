@@ -1,7 +1,6 @@
 package services;
 
 import br.com.dataoversound.components.QPSKPreambleComponent;
-import br.com.dataoversound.components.error.detection.ParityBitComponent;
 import br.com.dataoversound.configs.QPSKParameters;
 import br.com.dataoversound.services.QPSKDemodulationService;
 import br.com.dataoversound.services.QPSKModulationService;
@@ -9,9 +8,6 @@ import br.com.dataoversound.utils.AudioFile;
 import br.com.dataoversound.utils.Utils;
 import junit.framework.TestCase;
 import org.junit.Test;
-import org.mockito.ArgumentMatchers;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 
 public class QPSKDemodulationTest extends TestCase {
 
@@ -19,9 +15,6 @@ public class QPSKDemodulationTest extends TestCase {
     QPSKModulationService qpskModulationService;
     QPSKDemodulationService qpskDemodulationService;
     QPSKPreambleComponent preambleComponent;
-
-    @Mock
-    ParityBitComponent parityBitComponent = new ParityBitComponent();
 
     String message = "Gabriel";
     float carrierFrequency = 440f;
