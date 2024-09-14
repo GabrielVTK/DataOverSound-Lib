@@ -6,10 +6,7 @@ import org.apache.commons.math3.complex.Complex;
 import org.jtransforms.fft.DoubleFFT_1D;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.IntStream;
 
 
 public class QPSKPreambleComponent {
@@ -45,7 +42,6 @@ public class QPSKPreambleComponent {
     }
 
     public int detectPreamble(double[] signal) {
-        long tempoInicial = System.currentTimeMillis();
         double[] knownPreamble = this.generatePreamble();
 
         // Calcular a correlação
@@ -61,11 +57,9 @@ public class QPSKPreambleComponent {
             }
         }
 
-        if(maxIndex != -1) {
+        if (maxIndex != -1) {
             maxIndex += knownPreamble.length;
         }
-
-        System.out.println("o metodo detectPreamble executou em " + (System.currentTimeMillis() - tempoInicial));
 
         return maxIndex;
     }

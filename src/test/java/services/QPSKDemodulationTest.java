@@ -1,5 +1,7 @@
 package services;
 
+import br.com.dataoversound.components.QPSKPreambleComponent;
+import br.com.dataoversound.components.error.detection.ParityBitComponent;
 import br.com.dataoversound.configs.QPSKParameters;
 import br.com.dataoversound.services.QPSKDemodulationService;
 import br.com.dataoversound.services.QPSKModulationService;
@@ -7,15 +9,22 @@ import br.com.dataoversound.utils.AudioFile;
 import br.com.dataoversound.utils.Utils;
 import junit.framework.TestCase;
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 
 public class QPSKDemodulationTest extends TestCase {
 
     QPSKParameters qpskParameters;
     QPSKModulationService qpskModulationService;
     QPSKDemodulationService qpskDemodulationService;
+    QPSKPreambleComponent preambleComponent;
+
+    @Mock
+    ParityBitComponent parityBitComponent = new ParityBitComponent();
 
     String message = "Gabriel";
-    float carrierFrequency = 20000f;
+    float carrierFrequency = 440f;
 
     @Override
     protected void setUp() throws Exception {
@@ -28,6 +37,7 @@ public class QPSKDemodulationTest extends TestCase {
 
         this.qpskModulationService = new QPSKModulationService(qpskParameters);
         this.qpskDemodulationService = new QPSKDemodulationService(qpskParameters);
+        this.preambleComponent = new QPSKPreambleComponent(qpskParameters);
     }
 
     @Test
@@ -40,7 +50,12 @@ public class QPSKDemodulationTest extends TestCase {
 
         generateFile(signalWithCleanSignal);
 
-        String messageOutput = this.qpskDemodulationService.demodulateMessage(signalWithCleanSignal);
+        String messageOutput = null;
+        try {
+            messageOutput = this.qpskDemodulationService.demodulateMessage(signalWithCleanSignal);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         assertEquals(message, messageOutput);
     }
@@ -48,11 +63,15 @@ public class QPSKDemodulationTest extends TestCase {
     @Test
     public void testModuleDemodule() {
         double[] signal = this.qpskModulationService.modulateMessage(message);
-        String messageReceived = this.qpskDemodulationService.demodulateMessage(signal);
+        String messageReceived = null;
+        try {
+            messageReceived = this.qpskDemodulationService.demodulateMessage(signal);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         assertEquals(message, messageReceived);
     }
-
 
     private double[] generateCleanSignal(float seconds) {
         int numSamples = (int) (this.qpskParameters.getSampleRate() * seconds);

@@ -1,19 +1,19 @@
 package components.error.detection;
 
-import br.com.dataoversound.components.error.detection.BitParityComponent;
+import br.com.dataoversound.components.error.detection.ParityBitComponent;
 import junit.framework.TestCase;
 import org.junit.Test;
 
-public class BitParityComponentTest extends TestCase {
+public class ParityBitComponentTest extends TestCase {
 
-    BitParityComponent bitParityComponent = new BitParityComponent();
+    ParityBitComponent parityBitComponent = new ParityBitComponent();
 
     @Test
     public void testBitParityOdd() {
         String bits = "00000001";
         String bitsExpected = bits + "01";
 
-        String bitParity = this.bitParityComponent.calculate(bits);
+        String bitParity = this.parityBitComponent.calculate(bits);
 
         assertEquals(bitsExpected, bits + bitParity);
     }
@@ -23,7 +23,7 @@ public class BitParityComponentTest extends TestCase {
         String bits = "00000011";
         String bitsExpected = bits + "00";
 
-        String bitParity = this.bitParityComponent.calculate(bits);
+        String bitParity = this.parityBitComponent.calculate(bits);
 
         assertEquals(bitsExpected, bits + bitParity);
     }
@@ -33,7 +33,7 @@ public class BitParityComponentTest extends TestCase {
         String bits = "00000011";
         String bitParity = "00";
 
-        assertEquals(true, this.bitParityComponent.validate(bits, bitParity));
+        assertEquals(true, this.parityBitComponent.validate(bits, bitParity));
     }
 
     @Test
@@ -41,7 +41,7 @@ public class BitParityComponentTest extends TestCase {
         String bits = "00000011";
         String bitParity = "01";
 
-        assertEquals(false, this.bitParityComponent.validate(bits, bitParity));
+        assertEquals(false, this.parityBitComponent.validate(bits, bitParity));
     }
 
 }

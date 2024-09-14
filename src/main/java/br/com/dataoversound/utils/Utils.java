@@ -17,8 +17,11 @@ public class Utils {
 
     public static String convertBinaryToString(String bits) {
         StringBuilder result = new StringBuilder();
-        for(int i = 0; i < bits.length(); i += 8){
-            result.append((char)Integer.parseInt(bits.substring(i, i + 8), 2));
+        int length = bits.length();
+        for (int i = 0; i < length; i += 8) {
+            if (i + 8 <= length) {
+                result.append((char) Integer.parseInt(bits.substring(i, i + 8), 2));
+            }
         }
 
         return result.toString();
@@ -36,7 +39,7 @@ public class Utils {
 
     public static short[] doubleToShort(double[] arrDouble) {
         short[] arrShort = new short[arrDouble.length];
-        for(int i = 0; i < arrDouble.length; i++) {
+        for (int i = 0; i < arrDouble.length; i++) {
 
             double value = arrDouble[i];
 

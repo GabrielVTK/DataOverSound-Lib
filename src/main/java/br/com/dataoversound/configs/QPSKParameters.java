@@ -9,12 +9,12 @@ public class QPSKParameters extends Parameters {
         this.setSamplePerSymbol(samplePerSymbol);
     }
 
-    public int getSamplePerSymbol () {
+    public int getSamplePerSymbol() {
         return this.samplePerSymbol;
     }
 
     public void setSamplePerSymbol(int samplePerSymbol) throws Exception {
-        if(samplePerSymbol <= 0) {
+        if (samplePerSymbol <= 0) {
             throw new Exception("Número de amostras por símbolo deve ser maior que zero.");
         }
         this.samplePerSymbol = samplePerSymbol;

@@ -2,7 +2,7 @@ package br.com.dataoversound.components.error.detection;
 
 import java.util.Objects;
 
-public class BitParityComponent {
+public class ParityBitComponent {
 
     public String calculate(String bits) {
         int count = 0;

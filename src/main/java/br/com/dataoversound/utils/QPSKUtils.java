@@ -20,6 +20,17 @@ public class QPSKUtils {
         return symbols;
     }
 
+    public static String convertComplexToBits(List<Complex> demodulatedSymbols) {
+        StringBuilder demodulatedBits = new StringBuilder();
+
+        for (Complex symbol : demodulatedSymbols) {
+            String bits = mapPhaseToBits(symbol);
+            demodulatedBits.append(bits);
+        }
+
+        return demodulatedBits.toString();
+    }
+
     private static Complex mapBitsToQPSKSymbol(String bits) {
         switch (bits) {
             case "00":
@@ -32,6 +43,24 @@ public class QPSKUtils {
                 return new Complex(Math.cos(7 * Math.PI / 4), Math.sin(7 * Math.PI / 4)); // 315º (-45º)
             default:
                 throw new IllegalArgumentException("Par de bits inválido: " + bits);
+        }
+    }
+
+    private static String mapPhaseToBits(Complex symbol) {
+        double phase = symbol.getArgument();
+
+        // Normaliza a fase para estar no intervalo de 0 a 2*PI
+        phase = (phase + 2 * Math.PI) % (2 * Math.PI);
+
+        // Mapeamento da fase para os bits correspondentes
+        if (phase >= 0 && phase < Math.PI / 2) {
+            return "00"; // 45 graus
+        } else if (phase >= Math.PI / 2 && phase < Math.PI) {
+            return "01"; // 135 graus
+        } else if (phase >= Math.PI && phase < 3 * Math.PI / 2) {
+            return "11"; // 225 graus
+        } else {
+            return "10"; // 315 graus
         }
     }
 

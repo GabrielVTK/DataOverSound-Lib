@@ -72,11 +72,11 @@ public class AudioFile {
     }
 
     private void playSound(File sound) {
-        try{
+        try {
             Clip clip = AudioSystem.getClip();
             clip.open(AudioSystem.getAudioInputStream(sound));
             clip.start();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

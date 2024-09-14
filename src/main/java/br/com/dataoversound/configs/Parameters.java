@@ -20,7 +20,7 @@ public class Parameters {
     }
 
     public void setSampleRate(float sampleRate) throws Exception {
-        if(sampleRate <= 0) {
+        if (sampleRate <= 0) {
             throw new Exception("Taxa de amostragem deve ser maior que zero.");
         }
         this.sampleRate = sampleRate;
@@ -31,7 +31,7 @@ public class Parameters {
     }
 
     public void setCarrierFrequency(float carrierFrequency) throws Exception {
-        if(carrierFrequency <= 0) {
+        if (carrierFrequency <= 0) {
             throw new Exception("Frequência portadora deve ser maior que zero.");
         }
         this.carrierFrequency = carrierFrequency;
@@ -42,7 +42,7 @@ public class Parameters {
     }
 
     public void setCarrierAmplitude(float carrierAmplitude) throws Exception {
-        if(carrierAmplitude <= 0 || carrierAmplitude > 1) {
+        if (carrierAmplitude <= 0 || carrierAmplitude > 1) {
             throw new Exception("Amplitude deve ser maior que zero e menor ou igual a um.");
         }
         this.carrierAmplitude = carrierAmplitude;
