@@ -22,12 +22,10 @@ public class QPSKDemodulationComponent {
     public String signalToBits(double[] signal) {
 
         int preambleEndIndex = this.preambleComponent.detectPreamble(signal);
-        if (preambleEndIndex != -1) {
-            System.out.println("Preamble detected at index: " + preambleEndIndex);
-        } else {
-            System.out.println("Preamble not detected");
+        if (preambleEndIndex == -1) {
             return "Erro na detecção do preâmbulo";
         }
+        System.out.println("Preamble detected at index: " + preambleEndIndex);
 
         double[] signalWithoutPreamble = Arrays.copyOfRange(signal, preambleEndIndex, signal.length);
 
@@ -48,7 +46,7 @@ public class QPSKDemodulationComponent {
 
         int numSymbols = receivedSignal.length / samplesPerSymbol;
 
-        // Pré-computa o fator de frequência
+        // Pré-computa a frequência angular
         double angularFrequency = 2 * Math.PI * carrierFrequency;
 
         // Percorre o sinal recebido, demodulando cada símbolo QPSK

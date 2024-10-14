@@ -1,6 +1,5 @@
 package services;
 
-import br.com.dataoversound.components.QPSKPreambleComponent;
 import br.com.dataoversound.configs.QPSKParameters;
 import br.com.dataoversound.services.QPSKDemodulationService;
 import br.com.dataoversound.services.QPSKModulationService;
@@ -14,9 +13,8 @@ public class QPSKDemodulationTest extends TestCase {
     QPSKParameters qpskParameters;
     QPSKModulationService qpskModulationService;
     QPSKDemodulationService qpskDemodulationService;
-    QPSKPreambleComponent preambleComponent;
 
-    String message = "Gabriel";
+    String message = "Gabriel Vinicius";
     float carrierFrequency = 440f;
 
     @Override
@@ -30,13 +28,12 @@ public class QPSKDemodulationTest extends TestCase {
 
         this.qpskModulationService = new QPSKModulationService(qpskParameters);
         this.qpskDemodulationService = new QPSKDemodulationService(qpskParameters);
-        this.preambleComponent = new QPSKPreambleComponent(qpskParameters);
     }
 
     @Test
     public void testDemodulateQPSK() {
 
-        double[] signal = this.qpskModulationService.modulateMessage("Gabriel");
+        double[] signal = this.qpskModulationService.modulateMessage(message);
 
         double[] signalWithCleanSignal = Utils.concatArray(generateCleanSignal(0.5f), signal);
         signalWithCleanSignal = Utils.concatArray(signalWithCleanSignal, generateCleanSignal(0.5f));
