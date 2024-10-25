@@ -14,7 +14,7 @@ public class QPSKDemodulationTest extends TestCase {
     QPSKModulationService qpskModulationService;
     QPSKDemodulationService qpskDemodulationService;
 
-    String message = "Gabriel Vinicius";
+    String message = "Gabriel";
     float carrierFrequency = 440f;
 
     @Override
@@ -22,7 +22,7 @@ public class QPSKDemodulationTest extends TestCase {
         this.qpskParameters = new QPSKParameters(
                 44100.0f,
                 carrierFrequency,
-                1.0f,
+                0.9f,
                 (int) (carrierFrequency * 10)
         );
 
@@ -35,8 +35,11 @@ public class QPSKDemodulationTest extends TestCase {
 
         double[] signal = this.qpskModulationService.modulateMessage(message);
 
-        double[] signalWithCleanSignal = Utils.concatArray(generateCleanSignal(0.5f), signal);
-        signalWithCleanSignal = Utils.concatArray(signalWithCleanSignal, generateCleanSignal(0.5f));
+        double[] clearSignal = generateCleanSignal(0.5f);
+//        clearSignal = new double[0];
+
+        double[] signalWithCleanSignal = Utils.concatArray(clearSignal, signal);
+        signalWithCleanSignal = Utils.concatArray(signalWithCleanSignal, clearSignal);
 
         generateFile(signalWithCleanSignal);
 

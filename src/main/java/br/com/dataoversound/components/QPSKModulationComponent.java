@@ -10,13 +10,13 @@ import java.util.List;
 
 public class QPSKModulationComponent {
 
-    private QPSKParameters parameters;
+    private QPSKParameters qpskParameters;
 
     private QPSKPreambleComponent preambleComponent;
 
     public QPSKModulationComponent(QPSKParameters parameters) {
-        this.parameters = parameters;
-        this.preambleComponent = new QPSKPreambleComponent(this.parameters);
+        this.qpskParameters = parameters;
+        this.preambleComponent = new QPSKPreambleComponent(this.qpskParameters);
     }
 
     public double[] modulateBits(String bits) {
@@ -29,7 +29,7 @@ public class QPSKModulationComponent {
 
         // Modulação do sinal QPSK
         for (Complex symbol : symbols) {
-            for (int i = 0; i < this.parameters.getSamplePerSymbol(); i++) {
+            for (int i = 0; i < this.qpskParameters.getSamplePerSymbol(); i++) {
                 // Fase do símbolo QPSK (argumento do número complexo)
                 double phase = symbol.getArgument();
 
@@ -37,12 +37,17 @@ public class QPSKModulationComponent {
                 double amplitude = symbol.abs();
 
                 // Amostra do sinal modulado
-                double sample = this.parameters.getCarrierAmplitude() * amplitude * Math.cos(2 * Math.PI * this.parameters.getCarrierFrequency() * i / this.parameters.getSampleRate() + phase);
+                double sample = this.qpskParameters.getCarrierAmplitude() * amplitude * Math.cos(2 * Math.PI * this.qpskParameters.getCarrierFrequency() * i / this.qpskParameters.getSampleRate() + phase);
                 modulatedSignal.add(sample);
             }
         }
 
+        System.out.println("modulatedSignal: " + modulatedSignal.size());
+        System.out.println("preamble: " + preamble.length);
+
         double[] signal = Utils.concatArray(preamble, modulatedSignal.stream().mapToDouble(Double::doubleValue).toArray());
+
+        System.out.println("signal: " + signal.length);
 
         return signal;
     }
