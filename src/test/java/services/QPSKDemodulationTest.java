@@ -4,7 +4,7 @@ import br.com.dataoversound.configs.QPSKParameters;
 import br.com.dataoversound.services.QPSKDemodulationService;
 import br.com.dataoversound.services.QPSKModulationService;
 import br.com.dataoversound.utils.AudioFile;
-import br.com.dataoversound.utils.Utils;
+import br.com.dataoversound.utils.Converters;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -14,16 +14,17 @@ public class QPSKDemodulationTest extends TestCase {
     QPSKModulationService qpskModulationService;
     QPSKDemodulationService qpskDemodulationService;
 
-    String message = "Gabriel Vinicius";
+    String message = "Teste";
+    float sampleRate = 44100.0f;
     float carrierFrequency = 440f;
 
     @Override
     protected void setUp() throws Exception {
         this.qpskParameters = new QPSKParameters(
-                44100.0f,
+                sampleRate,
                 carrierFrequency,
-                1.0f,
-                (int) (carrierFrequency * 10)
+                0.9f,
+                ((int) (sampleRate/carrierFrequency)) * 20
         );
 
         this.qpskModulationService = new QPSKModulationService(qpskParameters);
@@ -35,8 +36,11 @@ public class QPSKDemodulationTest extends TestCase {
 
         double[] signal = this.qpskModulationService.modulateMessage(message);
 
-        double[] signalWithCleanSignal = Utils.concatArray(generateCleanSignal(0.5f), signal);
-        signalWithCleanSignal = Utils.concatArray(signalWithCleanSignal, generateCleanSignal(0.5f));
+        double[] clearSignal = generateCleanSignal(0.5f);
+        //clearSignal = new double[0];
+
+        double[] signalWithCleanSignal = Converters.concatArray(clearSignal, signal);
+        signalWithCleanSignal = Converters.concatArray(signalWithCleanSignal, clearSignal);
 
         generateFile(signalWithCleanSignal);
 
@@ -78,8 +82,8 @@ public class QPSKDemodulationTest extends TestCase {
         short[] carrierQPSKShort  = new short[0];
         byte[] carrierQPSKByte = new byte[0];
 
-        carrierQPSKShort = Utils.doubleToShort(signal);
-        carrierQPSKByte = Utils.shortToByte(carrierQPSKShort);
+        carrierQPSKShort = Converters.doubleToShort(signal);
+        carrierQPSKByte = Converters.shortToByte(carrierQPSKShort);
 
         AudioFile.write("./test.wav", carrierQPSKByte, qpskParameters.getSampleRate()); // Save signal in wav file
     }

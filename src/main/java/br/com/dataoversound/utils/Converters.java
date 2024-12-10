@@ -1,6 +1,6 @@
 package br.com.dataoversound.utils;
 
-public class Utils {
+public class Converters {
 
     public static String convertStringToBinary(String input) {
         StringBuilder result = new StringBuilder();
@@ -31,8 +31,8 @@ public class Utils {
         short[] signalShort;
         byte[] signalByte;
 
-        signalShort = Utils.doubleToShort(signal);
-        signalByte = Utils.shortToByte(signalShort);
+        signalShort = Converters.doubleToShort(signal);
+        signalByte = Converters.shortToByte(signalShort);
 
         return signalByte;
     }
