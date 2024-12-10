@@ -2,7 +2,7 @@ package br.com.dataoversound.components;
 
 import br.com.dataoversound.configs.QPSKParameters;
 import br.com.dataoversound.utils.QPSKUtils;
-import br.com.dataoversound.utils.Utils;
+import br.com.dataoversound.utils.Converters;
 import org.apache.commons.math3.complex.Complex;
 
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public class QPSKModulationComponent {
         System.out.println("modulatedSignal: " + modulatedSignal.size());
         System.out.println("preamble: " + preamble.length);
 
-        double[] signal = Utils.concatArray(preamble, modulatedSignal.stream().mapToDouble(Double::doubleValue).toArray());
+        double[] signal = Converters.concatArray(preamble, modulatedSignal.stream().mapToDouble(Double::doubleValue).toArray());
 
         System.out.println("signal: " + signal.length);
 

@@ -1,13 +1,13 @@
 package br.com.dataoversound.components.steps;
 
 import br.com.dataoversound.models.ProtocolModel;
-import br.com.dataoversound.utils.Utils;
+import br.com.dataoversound.utils.Converters;
 
 public class SetNumberSymbolsStep implements Step {
 
     @Override
     public void encode(ProtocolModel protocolModel, String messageBits) {
-        protocolModel.setNumberSymbol(Utils.convertIntegerToBinary(messageBits.length() / 2));
+        protocolModel.setNumberSymbol(Converters.convertIntegerToBinary(messageBits.length() / 2));
     }
 
     @Override
